@@ -4,6 +4,8 @@ import {compareSync, hashSync} from "bcrypt";
 import {UnnotarizedException} from "../util/exception/unnotarized.exception";
 import jwt from "jsonwebtoken";
 import {NotFoundException} from "../util/exception/not-found.exception";
+import {ValidationException} from "../util/exception/validation.exception";
+import {ForbbidenException} from "../util/exception/forbbiden.exception";
 
 const SECRET_KEY = process.env.ENCRYPT_KEY || "xavi";
 const TOKEN_EXPIRATION = process.env.TOKEN_EXPIRATION || "1d"
@@ -24,8 +26,54 @@ export default function createUserService() {
     }
 
     async function create(user: User) {
+        const existenceUser = await findByUsername(user.username);
+
+        if (existenceUser) {
+            throw new ValidationException("Usuário já cadastrado.");
+        }
+
         user.password = hashSync(user.password, 10);
         return await repository.save(user);
+    }
+
+    async function update(id: number, user: User, userAccess: string) {
+        const existenceUser = await find(id);
+
+        if (!existenceUser) {
+            throw new NotFoundException(`Usuário id ${id} não encontrado.`);
+        }
+
+        const existenceNewUser = await findByUsername(user.username);
+
+        if (existenceNewUser) {
+            throw new ValidationException("Usuário já cadastrado.");
+        }
+
+        if (userAccess !== existenceUser.username) {
+            throw new ForbbidenException("Não é permitido alterar esse usuário.");
+        }
+
+        return await repository.save(user);
+    }
+
+    async function remove(id: number, userAccess: string) {
+        const existenceUser = await find(id);
+
+        if (!existenceUser) {
+            throw new NotFoundException(`Usuário id ${id} não encontrado.`);
+        }
+
+        if (userAccess !== existenceUser.username) {
+            throw new ForbbidenException("Não é permitido remover esse usuário.");
+        }
+
+        const deleteResult = await repository.delete(existenceUser);
+
+        if (deleteResult.affected !== 1) {
+            throw new Error("Erro ao remover usuário.");
+        }
+
+        return existenceUser;
     }
 
     function generateToken(user: User) {
@@ -66,6 +114,8 @@ export default function createUserService() {
         findAll,
         create,
         login,
+        update,
+        remove,
         validateToken
     };
 }

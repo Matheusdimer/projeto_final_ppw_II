@@ -22,6 +22,6 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
         throw new UnnotarizedException("Token inválido.");
     }
 
-    req.query.userAcess = <string> access.sub;
+    req.query.userAccess = <string> access.sub;
     next();
 }

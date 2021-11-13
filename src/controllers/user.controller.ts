@@ -1,6 +1,6 @@
 import createUserService from "../service/user.service";
 import {Request, Response} from "express";
-import {parseLimitOffset} from "../util/params.parser";
+import {getUserAccess, parseLimitOffset} from "../util/params.parser";
 
 export default function createUserController() {
     const service = createUserService();
@@ -14,8 +14,20 @@ export default function createUserController() {
         return res.json(await service.create(req.body));
     }
 
+    async function update(req: Request, res: Response) {
+        const id = parseInt(req.params.id);
+        return res.json(await service.update(id, req.body, getUserAccess(req)));
+    }
+
+    async function remove(req: Request, res: Response) {
+        const id = parseInt(req.params.id);
+        return res.json(await service.remove(id,getUserAccess(req)));
+    }
+
     return {
         findAll,
-        create
+        create,
+        update,
+        remove
     }
 }

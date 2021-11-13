@@ -9,4 +9,8 @@ router.get("/", authMiddleware, controller.findAll);
 
 router.post("/", controller.create);
 
+router.put("/:id", authMiddleware, controller.update);
+
+router.delete("/:id", authMiddleware, controller.remove);
+
 export default router;
