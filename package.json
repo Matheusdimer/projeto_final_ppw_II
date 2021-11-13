@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts",
-    "start": "rm -r ./dist && ./node_modules/typescript/bin/tsc && cd dist && node src/index.js"
+    "start": "if [ ! -d dist ]; then rm -rf ./dist; fi; ./node_modules/typescript/bin/tsc && cd dist && node src/index.js"
   },
   "type": "module",
   "keywords": [],
