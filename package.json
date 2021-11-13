@@ -7,7 +7,6 @@
     "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/index.ts",
     "start": "if [ ! -d dist ]; then rm -rf ./dist; fi; ./node_modules/typescript/bin/tsc && cd dist && node src/index.js"
   },
-  "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
