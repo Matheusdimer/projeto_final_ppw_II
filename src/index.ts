@@ -1,14 +1,10 @@
 import 'reflect-metadata';
-import express from 'express';
-import cors from 'cors';
-import routes from './routes';
+import {createConnection} from "typeorm";
 
-const PORT = process.env.PORT || 8090;
+console.log("Starting database connection...");
 
-const app = express();
+createConnection().then(() => {
+    console.log("Database connection successful!");
 
-app.use(cors());
-
-app.use('/api', routes);
-
-app.listen(PORT, () => console.log('Application listening on port ' + PORT));
+    import("./server")
+})
