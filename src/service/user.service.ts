@@ -111,6 +111,7 @@ export default function createUserService() {
     }
 
     return {
+        find,
         findAll,
         create,
         login,

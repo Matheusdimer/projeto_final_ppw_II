@@ -10,6 +10,11 @@ export default function createUserController() {
         return res.json(await service.findAll(skip, limit));
     }
 
+    async function find(req: Request, res: Response) {
+        const id = parseInt(req.params.id);
+        return res.json(await service.find(id));
+    }
+
     async function create(req: Request, res: Response) {
         return res.json(await service.create(req.body));
     }
@@ -25,6 +30,7 @@ export default function createUserController() {
     }
 
     return {
+        find,
         findAll,
         create,
         update,
