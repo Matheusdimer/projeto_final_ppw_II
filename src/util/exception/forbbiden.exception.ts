@@ -1,7 +1,7 @@
 import {HttpException} from "./http.exception";
 
-export class ValidationException extends HttpException {
+export class ForbbidenException extends HttpException {
     constructor(message: string) {
-        super(message, 422);
+        super(message, 403);
     }
 }

@@ -2,6 +2,11 @@ import {User} from "../model/user.model";
 import {getRepository} from "typeorm";
 import {compareSync, hashSync} from "bcrypt";
 import {UnnotarizedException} from "../util/exception/unnotarized.exception";
+import jwt from "jsonwebtoken";
+import {NotFoundException} from "../util/exception/not-found.exception";
+
+const SECRET_KEY = process.env.ENCRYPT_KEY || "xavi";
+const TOKEN_EXPIRATION = process.env.TOKEN_EXPIRATION || "1d"
 
 export default function createUserService() {
     const repository = getRepository(User);
@@ -24,14 +29,28 @@ export default function createUserService() {
     }
 
     function generateToken(user: User) {
-        return "";
+        return jwt.sign({ sub: user.username }, SECRET_KEY, {
+            expiresIn: TOKEN_EXPIRATION
+        });
+    }
+
+    function validateToken(token: string) {
+        try {
+            return jwt.verify(token, SECRET_KEY);
+        } catch (e) {
+            return null;
+        }
     }
 
     async function login(user: User): Promise<string> {
+        if (!user) {
+            throw new UnnotarizedException("Usuário não autorizado.");
+        }
+
         const savedUser = await findByUsername(user.username);
 
         if (!savedUser) {
-            throw new UnnotarizedException("Usuário não autorizado.");
+            throw new NotFoundException("Usuário não encontrado.");
         }
 
         const verified = compareSync(user.password, savedUser.password);
@@ -45,6 +64,8 @@ export default function createUserService() {
 
     return {
         findAll,
-        create
+        create,
+        login,
+        validateToken
     };
 }

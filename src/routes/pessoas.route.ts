@@ -1,8 +1,9 @@
 import { Router } from 'express';
+import authMiddleware from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.get('/', function (req, res) {
+router.get('/', authMiddleware, function (req, res) {
   res.send('teste');
 });
 
