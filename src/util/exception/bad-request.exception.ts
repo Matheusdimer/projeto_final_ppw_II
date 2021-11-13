@@ -1,8 +1,7 @@
-export class BadRequestException extends Error {
-    status: number;
+import {HttpException} from "./http.exception";
 
+export class BadRequestException extends HttpException {
     constructor(message: string) {
-        super(message);
-        this.status = 404
+        super(message, 404);
     }
 }
