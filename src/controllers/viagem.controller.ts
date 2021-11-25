@@ -1,13 +1,19 @@
-import createUserService from "../service/user.service";
 import {Request, Response} from "express";
-import {getUserAccess, parseSkipLimit} from "../util/params.parser";
+import {parseSkipLimit, tryParseNumber} from "../util/params.parser";
+import createViagemService from "../service/viagem.service";
+import {isNumber} from "util";
 
-export default function createUserController() {
-    const service = createUserService();
+export default function createViagemController() {
+    const service = createViagemService();
 
     async function findAll(req: Request, res: Response) {
         const { skip, limit } = parseSkipLimit(req);
-        return res.json(await service.findAll(skip, limit));
+        const { viajante, orgao } = req.params
+
+        const viajanteId = tryParseNumber(viajante, "Identificador do viajante inválido.");
+        const orgaoId = tryParseNumber(orgao, "Identificador do orgão inválido.");
+
+        return res.json(await service.findAll(skip, limit, viajanteId, orgaoId));
     }
 
     async function find(req: Request, res: Response) {
@@ -21,12 +27,12 @@ export default function createUserController() {
 
     async function update(req: Request, res: Response) {
         const id = parseInt(req.params.id);
-        return res.json(await service.update(id, req.body, getUserAccess(req)));
+        return res.json(await service.update(id, req.body));
     }
 
     async function remove(req: Request, res: Response) {
         const id = parseInt(req.params.id);
-        return res.json(await service.remove(id,getUserAccess(req)));
+        return res.json(await service.remove(id));
     }
 
     return {

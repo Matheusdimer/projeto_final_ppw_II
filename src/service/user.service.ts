@@ -21,8 +21,8 @@ export default function createUserService() {
         return await repository.findOne({ username });
     }
 
-    async function findAll(skip: number, limit: number) {
-        return await repository.find({ skip, take: limit });
+    async function findAll(skip: number, take: number) {
+        return await repository.find({ skip, take });
     }
 
     async function create(user: User) {
@@ -69,7 +69,7 @@ export default function createUserService() {
 
         const deleteResult = await repository.delete(existenceUser);
 
-        if (deleteResult.affected !== 1) {
+        if (deleteResult.affected === 0) {
             throw new Error("Erro ao remover usuário.");
         }
 

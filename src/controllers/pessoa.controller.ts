@@ -1,13 +1,13 @@
-import createUserService from "../service/user.service";
 import {Request, Response} from "express";
-import {getUserAccess, parseSkipLimit} from "../util/params.parser";
+import {parseSkipLimit} from "../util/params.parser";
+import createPessoaService from "../service/pessoa.service";
 
-export default function createUserController() {
-    const service = createUserService();
+export default function createPessoaController() {
+    const service = createPessoaService();
 
     async function findAll(req: Request, res: Response) {
         const { skip, limit } = parseSkipLimit(req);
-        return res.json(await service.findAll(skip, limit));
+        return res.json(await service.findAll(skip, limit, <string>req.query.cpf));
     }
 
     async function find(req: Request, res: Response) {
@@ -21,12 +21,12 @@ export default function createUserController() {
 
     async function update(req: Request, res: Response) {
         const id = parseInt(req.params.id);
-        return res.json(await service.update(id, req.body, getUserAccess(req)));
+        return res.json(await service.update(id, req.body));
     }
 
     async function remove(req: Request, res: Response) {
         const id = parseInt(req.params.id);
-        return res.json(await service.remove(id,getUserAccess(req)));
+        return res.json(await service.remove(id));
     }
 
     return {

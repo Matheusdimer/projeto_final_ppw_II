@@ -1,9 +1,9 @@
 import {Router} from "express";
 import authMiddleware from "../middleware/auth.middleware";
-import createPessoaController from "../controllers/pessoa.controller";
+import createViagemController from "../controllers/viagem.controller";
 
 const router = Router();
-const controller = createPessoaController();
+const controller = createViagemController();
 
 router.get("/", authMiddleware, controller.findAll);
 

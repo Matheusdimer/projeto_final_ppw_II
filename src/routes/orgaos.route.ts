@@ -1,9 +1,9 @@
 import {Router} from "express";
 import authMiddleware from "../middleware/auth.middleware";
-import createPessoaController from "../controllers/pessoa.controller";
+import createOrgaoController from "../controllers/orgao.controller";
 
 const router = Router();
-const controller = createPessoaController();
+const controller = createOrgaoController();
 
 router.get("/", authMiddleware, controller.findAll);
 

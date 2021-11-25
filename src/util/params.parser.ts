@@ -1,11 +1,13 @@
 import {Request} from "express";
 import {UnnotarizedException} from "./exception/unnotarized.exception";
+import {BadRequestException} from "./exception/bad-request.exception";
 
-export function parseLimitOffset(request: Request) {
-    const { page, limit } = request.query;
+export function parseSkipLimit(request: Request) {
+    const page = tryParseNumber(<string>request.query.page, "Parâmetro page inválido.");
+    const limit = tryParseNumber(<string>request.query.limit, "Parâmetro limit inválido.");
 
-    const limitNumber = limit ? parseInt(<string>limit) : 20;
-    const skip = (page ? parseInt(<string>page) : 0) * limitNumber
+    const limitNumber = limit || 20;
+    const skip = (page || 0) * limitNumber
 
     return {
         skip: skip,
@@ -21,4 +23,16 @@ export function getUserAccess(request: Request): string {
     }
 
     return <string> userAccess;
+}
+
+export function tryParseNumber(string: string, errorMessage: string) {
+    if (string) {
+        try {
+            return parseInt(string);
+        } catch (e) {
+            throw new BadRequestException(errorMessage);
+        }
+    }
+
+    return undefined;
 }
