@@ -8,7 +8,7 @@ export default function createViagemController() {
 
     async function findAll(req: Request, res: Response) {
         const { skip, limit } = parseSkipLimit(req);
-        const { viajante, orgao } = req.params
+        const { viajante, orgao } = req.query
 
         const viajanteId = tryParseNumber(viajante, "Identificador do viajante inválido.");
         const orgaoId = tryParseNumber(orgao, "Identificador do orgão inválido.");

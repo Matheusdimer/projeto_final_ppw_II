@@ -3,8 +3,8 @@ import {UnnotarizedException} from "./exception/unnotarized.exception";
 import {BadRequestException} from "./exception/bad-request.exception";
 
 export function parseSkipLimit(request: Request) {
-    const page = tryParseNumber(<string>request.query.page, "Parâmetro page inválido.");
-    const limit = tryParseNumber(<string>request.query.limit, "Parâmetro limit inválido.");
+    const page = tryParseNumber(request.query.page, "Parâmetro page inválido.");
+    const limit = tryParseNumber(request.query.limit, "Parâmetro limit inválido.");
 
     const limitNumber = limit || 20;
     const skip = (page || 0) * limitNumber
@@ -25,7 +25,7 @@ export function getUserAccess(request: Request): string {
     return <string> userAccess;
 }
 
-export function tryParseNumber(string: string, errorMessage: string) {
+export function tryParseNumber(string: any, errorMessage: string) {
     if (string) {
         try {
             return parseInt(string);

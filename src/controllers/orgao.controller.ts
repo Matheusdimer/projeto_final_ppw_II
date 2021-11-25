@@ -8,7 +8,7 @@ export default function createOrgaoController() {
     async function findAll(req: Request, res: Response) {
         const { skip, limit } = parseSkipLimit(req);
 
-        const orgaoId = tryParseNumber(<string>req.query.orgao, "Código do órgão inválido.");
+        const orgaoId = tryParseNumber(req.query.orgao, "Código do órgão inválido.");
 
         return res.json(await service.findAll(skip, limit, orgaoId));
     }
