@@ -1,0 +1,18 @@
+INSERT INTO public.orgao (id, codigo, nome) VALUES (37, 20000, 'Presidência da República');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (38, 20113, 'Ministério do Planejamento, Desenvolvimento e Gestão');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (39, 22000, 'Ministério da Agricultura, Pecuária e Abastecimento');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (40, 24000, 'Ministério da Ciência, Tecnologia, Inovações e Comunicações');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (41, 25000, 'Ministério da Economia');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (42, 26000, 'Ministério da Educação');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (43, 30000, 'Ministério da Justiça e Segurança Pública');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (44, 32000, 'Ministério de Minas e Energia');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (45, 35000, 'Ministério das Relações Exteriores');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (46, 36000, 'Ministério da Saúde');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (47, 37000, 'Controladoria-Geral da União');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (48, 39000, 'Ministério da Infraestrutura');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (49, 41000, 'Ministério das Comunicações');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (50, 44000, 'Ministério do Meio Ambiente');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (51, 52000, 'Ministério da Defesa');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (52, 53000, 'Ministério do Desenvolvimento Regional');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (53, 54000, 'Ministério do Turismo');
+INSERT INTO public.orgao (id, codigo, nome) VALUES (54, 63000, 'Advocacia-Geral da União');
