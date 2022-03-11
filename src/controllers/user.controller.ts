@@ -1,39 +1,31 @@
-import createUserService from "../service/user.service";
 import {Request, Response} from "express";
 import {getUserAccess, parseSkipLimit} from "../util/params.parser";
+import UserService from "../service/user.service";
 
-export default function createUserController() {
-    const service = createUserService();
+export default class UserController {
+    service = new UserService();
 
-    async function findAll(req: Request, res: Response) {
+    async findAll(req: Request, res: Response) {
         const { skip, limit } = parseSkipLimit(req);
-        return res.json(await service.findAll(skip, limit));
+        return res.json(await this.service.findAll(skip, limit));
     }
 
-    async function find(req: Request, res: Response) {
+    async find(req: Request, res: Response) {
         const id = parseInt(req.params.id);
-        return res.json(await service.find(id));
+        return res.json(await this.service.find(id));
     }
 
-    async function create(req: Request, res: Response) {
-        return res.json(await service.create(req.body));
+    async create(req: Request, res: Response) {
+        return res.json(await this.service.create(req.body));
     }
 
-    async function update(req: Request, res: Response) {
+    async update(req: Request, res: Response) {
         const id = parseInt(req.params.id);
-        return res.json(await service.update(id, req.body, getUserAccess(req)));
+        return res.json(await this.service.update(id, req.body, getUserAccess(req)));
     }
 
-    async function remove(req: Request, res: Response) {
+    async remove(req: Request, res: Response) {
         const id = parseInt(req.params.id);
-        return res.json(await service.remove(id,getUserAccess(req)));
-    }
-
-    return {
-        find,
-        findAll,
-        create,
-        update,
-        remove
+        return res.json(await this.service.remove(id,getUserAccess(req)));
     }
 }

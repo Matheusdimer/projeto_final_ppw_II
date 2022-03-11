@@ -10,40 +10,40 @@ import {ForbbidenException} from "../util/exception/forbbiden.exception";
 const SECRET_KEY = process.env.ENCRYPT_KEY || "xavi";
 const TOKEN_EXPIRATION = process.env.TOKEN_EXPIRATION || "1d"
 
-export default function createUserService() {
-    const repository = getRepository(User);
+export default class UserService {
+    repository = getRepository(User);
 
-    async function find(id: number) {
-        return await repository.findOne({ id });
+    async find(id: number) {
+        return await this.repository.findOne({ id });
     }
 
-    async function findByUsername(username: string) {
-        return await repository.findOne({ username });
+    async findByUsername(username: string) {
+        return await this.repository.findOne({ username });
     }
 
-    async function findAll(skip: number, take: number) {
-        return await repository.find({ skip, take });
+    async findAll(skip: number, take: number) {
+        return await this.repository.find({ skip, take });
     }
 
-    async function create(user: User) {
-        const existenceUser = await findByUsername(user.username);
+    async create(user: User) {
+        const existenceUser = await this.findByUsername(user.username);
 
         if (existenceUser) {
             throw new ValidationException("Usuário já cadastrado.");
         }
 
         user.password = hashSync(user.password, 10);
-        return await repository.save(user);
+        return await this.repository.save(user);
     }
 
-    async function update(id: number, user: User, userAccess: string) {
-        const existenceUser = await find(id);
+    async update(id: number, user: User, userAccess: string) {
+        const existenceUser = await this.find(id);
 
         if (!existenceUser) {
             throw new NotFoundException(`Usuário id ${id} não encontrado.`);
         }
 
-        const existenceNewUser = await findByUsername(user.username);
+        const existenceNewUser = await this.findByUsername(user.username);
 
         if (existenceNewUser) {
             throw new ValidationException("Usuário já cadastrado.");
@@ -53,11 +53,11 @@ export default function createUserService() {
             throw new ForbbidenException("Não é permitido alterar esse usuário.");
         }
 
-        return await repository.save(user);
+        return await this.repository.save(user);
     }
 
-    async function remove(id: number, userAccess: string) {
-        const existenceUser = await find(id);
+    async remove(id: number, userAccess: string) {
+        const existenceUser = await this.find(id);
 
         if (!existenceUser) {
             throw new NotFoundException(`Usuário id ${id} não encontrado.`);
@@ -67,7 +67,7 @@ export default function createUserService() {
             throw new ForbbidenException("Não é permitido remover esse usuário.");
         }
 
-        const deleteResult = await repository.delete(existenceUser);
+        const deleteResult = await this.repository.delete(existenceUser);
 
         if (deleteResult.affected === 0) {
             throw new Error("Erro ao remover usuário.");
@@ -76,13 +76,13 @@ export default function createUserService() {
         return existenceUser;
     }
 
-    function generateToken(user: User) {
+    generateToken(user: User) {
         return jwt.sign({ sub: user.username }, SECRET_KEY, {
             expiresIn: TOKEN_EXPIRATION
         });
     }
 
-    function validateToken(token: string) {
+    validateToken(token: string) {
         try {
             return jwt.verify(token, SECRET_KEY);
         } catch (e) {
@@ -90,12 +90,12 @@ export default function createUserService() {
         }
     }
 
-    async function login(user: User): Promise<string> {
+    async login(user: User): Promise<string> {
         if (!user) {
             throw new UnnotarizedException("Usuário não autorizado.");
         }
 
-        const savedUser = await findByUsername(user.username);
+        const savedUser = await this.findByUsername(user.username);
 
         if (!savedUser) {
             throw new NotFoundException("Usuário não encontrado.");
@@ -107,16 +107,6 @@ export default function createUserService() {
             throw new UnnotarizedException("Usuário não autorizado.");
         }
 
-        return generateToken(user);
+        return this.generateToken(user);
     }
-
-    return {
-        find,
-        findAll,
-        create,
-        login,
-        update,
-        remove,
-        validateToken
-    };
 }
