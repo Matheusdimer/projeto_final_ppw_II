@@ -2,56 +2,48 @@ import {FindConditions, getRepository} from "typeorm";
 import {NotFoundException} from "../util/exception/not-found.exception";
 import {Orgao} from "../model/orgao.model";
 
-export default function createOrgaoService() {
-    const repository = getRepository(Orgao);
+export default class OrgaoService {
+    repository = getRepository(Orgao);
 
-    async function find(id: number) {
-        const orgao = await repository.findOne(id);
+    async find(id: number) {
+        const orgao = await this.repository.findOne(id);
 
         if (!orgao) {
-            throw new NotFoundException(`Orgao com id ${id} não encontrada.`);
+            throw new NotFoundException(`Orgão com id ${id} não encontrado.`);
         }
 
         return orgao;
     }
 
-    async function findAll(skip: number, take: number, codigo?: number) {
+    async findAll(skip: number, take: number, codigo?: number) {
         const where: FindConditions<Orgao> = {};
 
         if (codigo) {
             where.codigo = codigo;
         }
 
-        return await repository.find({ skip, take, where })
+        return await this.repository.find({ skip, take, where })
     }
 
-    async function create(orgao: Orgao) {
-        return await repository.save(orgao);
+    async create(orgao: Orgao) {
+        return await this.repository.save(orgao);
     }
 
-    async function update(id: number, orgao: Orgao) {
-        await find(id);
+    async update(id: number, orgao: Orgao) {
+        await this.find(id);
         orgao.id = id;
-        return await repository.save(orgao);
+        return await this.repository.save(orgao);
     }
 
-    async function remove(id: number) {
-        const orgao = await find(id);
+    async remove(id: number) {
+        const orgao = await this.find(id);
 
-        const deleteResult = await repository.delete(orgao);
+        const deleteResult = await this.repository.delete(orgao);
 
         if (deleteResult.affected === 0) {
-            throw new Error("Erro ao excluir orgao.");
+            throw new Error("Erro ao excluir orgão.");
         }
 
         return orgao;
-    }
-
-    return {
-        find,
-        findAll,
-        create,
-        update,
-        remove
     }
 }
